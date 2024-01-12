@@ -10,7 +10,7 @@ const parsed = parse();
 const config = isProxy(parsed) ? { proxy: parsed } : parsed;
 
 for (const name of Object.keys(config)) {
-  const { hostname, target, key, cert, source } = config[name]!;
+  const { hostname, sourcehostname, target, key, cert, source } = config[name]!;
 
   proxy
     .createServer({
@@ -28,11 +28,11 @@ for (const name of Object.keys(config)) {
     .on('error', (e: any) => {
       console.error(red('Request failed to ' + name + ': ' + bold(e.code)));
     })
-    .listen(source);
+    .listen(source, sourcehostname);
 
   console.log(
     green(
-      `Started ${isProxy(parsed) ? 'proxy' : bold(name)}: https://${hostname}:${source} → http://${hostname}:${target}`
+      `Started ${isProxy(parsed) ? 'proxy' : bold(name)}: https://${sourcehostname}:${source} → http://${hostname}:${target}`
     )
   );
 }

@@ -14,7 +14,8 @@ const parseInteger = (value: string) => parseInt(value, 10);
 
 const program = createCommand(name)
   .version(version, '-v, --version', 'show version number')
-  .option('-n, --hostname <hostname>', 'hostname for the server', 'localhost')
+  .option('-n, --hostname <hostname>', 'hostname for the target server', 'localhost')
+  .option('-sn, --sourcehostname <hostname>', 'hostname for the source server', 'localhost')
   .option('-s, --source <source>', 'source port for the server', parseInteger, 9001)
   .option('-t, --target <target>', 'target port for the server', parseInteger, 9000)
   .option(
@@ -28,6 +29,7 @@ const program = createCommand(name)
 
 type Proxy = {
   hostname: string;
+  sourcehostname: string;
   source: number;
   target: number;
   cert: string;
@@ -47,6 +49,8 @@ export function isProxy(input: unknown): input is Proxy {
       typeof input === 'object' &&
       'hostname' in input &&
       typeof input.hostname === 'string' &&
+      'sourcehostname' in input &&
+      typeof input.sourcehostname === 'string' &&
       'source' in input &&
       typeof input.source === 'number' &&
       'target' in input &&
